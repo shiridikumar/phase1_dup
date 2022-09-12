@@ -19,7 +19,29 @@ Key LeafNode::max() {
 //TODO: LeafNode::insert_key to be implemented
 TreePtr LeafNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
     TreePtr new_leaf = NULL_PTR; //if leaf is split, new_leaf = ptr to new split node ptr
-    cout << "LeafNode::insert_key not implemented" << endl;
+    
+    if(this->is_full()){
+        this->data_pointers[key]=record_ptr;
+        this->size+=1;
+        auto mid=this->data_pointers.begin();
+        advance(mid,ceil(this->size/2));
+        // cout<<(*mid).first<<" "<<(*mid).second<<endl;
+        TreeNode * newnode=tree_node_factory(LEAF);
+        for(auto it=mid;it!=this->data_pointers.end();it++){
+            cout<<(*it).first<<" "<<(*it).second<<endl;
+            this->size-=1;
+        }
+        // for(auto it=mid;it!=this->data_pointers.end();it++){
+            this->data_pointers.erase(mid,this->data_pointers.end());
+        // }
+        // tree_node_factory(this->tree_ptr,newnode->tree_ptr);
+    }
+    else{
+        this->data_pointers[key]=record_ptr;
+        this->size+=1;
+    }
+      cout << "LeafNode::insert_key not implemented" << endl;
+
     this->dump();
     return new_leaf;
 }

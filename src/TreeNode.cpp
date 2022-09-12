@@ -51,7 +51,6 @@ TreeNode* TreeNode::tree_node_factory(TreePtr tree_ptr) {
     ifstream fin(TEMP_PATH + tree_ptr);
     fin >> node_type;
     fin.close();
-
     switch (node_type) {
         case LEAF: return new LeafNode(tree_ptr);
         case INTERNAL: return new InternalNode(tree_ptr);
@@ -108,6 +107,8 @@ void TreeNode::dump() const{
 
 void TreeNode::load() {
     ifstream fin(TEMP_PATH + this->tree_ptr);
+    // cout<<"reading"<<endl;
+    //  cout<<TEMP_PATH+this->tree_ptr<<endl;
     this->read(fin);
     fin.close();
 }
@@ -135,6 +136,7 @@ istream& TreeNode::read(istream& is){
         cout << "tree node id: "; cin >> this->tree_ptr;
         cout << "size: "; cin >> this->size;
     } else {
+        // cout<<"asdasda "<<endl;
         is >> this->node_type;
         is >> this->tree_ptr;
         is >> this->size;

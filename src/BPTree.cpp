@@ -15,8 +15,11 @@ BPTree::BPTree(const TreePtr &tree_ptr) {
 void BPTree::insert_key(const Key &key, const RecordPtr &record_ptr) {
     TreeNode* root_node = TreeNode::tree_node_factory(this->root_ptr);
     //root node can be split
+    //  cout<<"split occuring ********************"<<endl;
     TreePtr potential_split_node_ptr = root_node->insert_key(key, record_ptr);
+    //  cout<<"split occuring ----------------------"<<endl;
     if(!is_null(potential_split_node_ptr)){
+        // cout<<"split occuring ********************"<<endl;
         //if split occurs at root, new root node should be created
         auto new_root = TreeNode::tree_node_factory(this->root_ptr, potential_split_node_ptr);
         this->root_ptr = new_root->tree_ptr;
