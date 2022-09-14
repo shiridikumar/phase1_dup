@@ -22,9 +22,10 @@ TreePtr LeafNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
     
     if(this->is_full()){
         this->data_pointers[key]=record_ptr;
+
         this->size+=1;
         auto mid=this->data_pointers.begin();
-        advance(mid,ceil(this->size/2));
+        advance(mid,ceil(this->size/2.0));
    
         TreeNode * newnode=tree_node_factory(LEAF);
         for(auto it=mid;it!=this->data_pointers.end();it++){
