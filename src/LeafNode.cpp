@@ -25,24 +25,26 @@ TreePtr LeafNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
         this->size+=1;
         auto mid=this->data_pointers.begin();
         advance(mid,ceil(this->size/2));
-        // cout<<(*mid).first<<" "<<(*mid).second<<endl;
+   
         TreeNode * newnode=tree_node_factory(LEAF);
         for(auto it=mid;it!=this->data_pointers.end();it++){
-            cout<<(*it).first<<" "<<(*it).second<<endl;
+            newnode->insert_key((*it).first,(*it).second);
             this->size-=1;
         }
-        // for(auto it=mid;it!=this->data_pointers.end();it++){
-            this->data_pointers.erase(mid,this->data_pointers.end());
-        // }
-        // tree_node_factory(this->tree_ptr,newnode->tree_ptr);
+        this->data_pointers.erase(mid,this->data_pointers.end());
+        this->dump();
+        // TreeNode * split_node =tree_node_factory(this->tree_ptr,newnode->tree_ptr);
+        // this->tree_ptr=split_node->tree_ptr;
+        // this->dump();
+        return newnode->tree_ptr;
     }
     else{
         this->data_pointers[key]=record_ptr;
         this->size+=1;
+        this->dump();
     }
       cout << "LeafNode::insert_key not implemented" << endl;
 
-    this->dump();
     return new_leaf;
 }
 

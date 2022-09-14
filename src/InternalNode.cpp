@@ -1,5 +1,5 @@
 #include "InternalNode.hpp"
-
+#include<bits/stdc++.h>
 //creates internal node pointed to by tree_ptr or creates a new one
 InternalNode::InternalNode(const TreePtr &tree_ptr) : TreeNode(INTERNAL, tree_ptr) {
     this->keys.clear();
@@ -29,8 +29,46 @@ TreePtr InternalNode::single_child_ptr() {
 //TODO: InternalNode::insert_key to be implemented
 TreePtr InternalNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
     TreePtr new_tree_ptr = NULL_PTR;
-    cout << "InternalNode::insert_key not implemented" << endl;
+    vector<Key> keys=this->keys;
+    int ind;
+    
+    auto index=lower_bound(keys.begin(),keys.end(),key);
+    ind=index-keys.begin();
+    TreePtr insertnode=this->tree_pointers[ind];
+    cout<<ind<<endl;
+    TreeNode * node=tree_node_factory(insertnode);
+    TreePtr split= node->insert_key(key,record_ptr);
+    if(!is_null(split)){
+        auto leftnode=tree_node_factory(insertnode);
+        this->keys.push_back(leftnode->max());
+        this->tree_pointers.push_back(split);
+        this->size+=1;
+        if(this->overflows()){
+            cout<<"overflowing ****************"<<endl;
+            auto mid=this->keys.begin();
+            advance(mid,ceil(this->keys.size()/2));
+            auto newnode=new InternalNode();
+            for(auto it=mid;it!=this->keys.end();it++){
+                newnode->keys.push_back(*it);
+                this->size-=1;
+                cout<<this->size<<endl;
+            }
+            auto midpointer=this->tree_pointers.begin();
+            advance(midpointer,ceil(this->size/2));
+            for(auto it=midpointer+1;it!=this->tree_pointers.end();it++){
+                newnode->tree_pointers.push_back(*it);
+                newnode->size+=1;
+            }
+            newnode->dump();
+            this->keys.erase(mid,this->keys.end());
+            this->tree_pointers.erase(midpointer-1,this->tree_pointers.end());
+            this->dump();
+            cout<<this->tree_ptr<<"  "<<newnode->tree_ptr<<endl;
+            return newnode->tree_ptr;
+        }
+    }
     this->dump();
+    cout << "InternalNode::insert_key not implemented" << endl;
     return new_tree_ptr;
 }
 
