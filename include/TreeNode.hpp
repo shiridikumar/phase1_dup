@@ -24,6 +24,7 @@ public:
     NodeType node_type;
     TreePtr tree_ptr;
     uint size;
+    TreePtr parent;
 
     //constructor
     explicit TreeNode(const NodeType& node_type = INTERNAL, const TreePtr & tree_ptr = NULL_PTR);

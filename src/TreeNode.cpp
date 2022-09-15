@@ -63,8 +63,12 @@ TreeNode* TreeNode::tree_node_factory(const TreePtr &child_tree_ptr1, const Tree
     new_internal_node->tree_pointers.push_back(child_tree_ptr1);
     new_internal_node->tree_pointers.push_back(child_tree_ptr2);
     auto left_child_node = TreeNode::tree_node_factory(child_tree_ptr1);
+    auto right_child_node = TreeNode::tree_node_factory(child_tree_ptr1);
+    left_child_node->parent=new_internal_node->tree_ptr;
+    right_child_node->parent=new_internal_node->tree_ptr;
+    left_child_node->dump();
+    right_child_node->dump();
     new_internal_node->keys.push_back(left_child_node->max());
-    // sort(new_internal_node.begin(),new_internal_node.end());
     delete left_child_node;
     new_internal_node->size = 2;
     new_internal_node->dump();
@@ -127,6 +131,7 @@ ostream& TreeNode::write(ostream& os) const {
         os << this->node_type << endl;
         os << this->tree_ptr << endl;
         os << this->size << endl;
+        os << this->parent << endl;
     }
     return os;
 }
@@ -141,6 +146,7 @@ istream& TreeNode::read(istream& is){
         is >> this->node_type;
         is >> this->tree_ptr;
         is >> this->size;
+        is >> this->parent;
     }
     return is;
 }

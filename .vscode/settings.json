@@ -17,6 +17,7 @@
         "stdexcept": "cpp",
         "regex": "cpp",
         "tuple": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "iostream": "cpp"
     }
 }

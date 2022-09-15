@@ -4,6 +4,7 @@
 InternalNode::InternalNode(const TreePtr &tree_ptr) : TreeNode(INTERNAL, tree_ptr) {
     this->keys.clear();
     this->tree_pointers.clear();
+    this->parent=NULL_PTR;
     if (!is_null(tree_ptr))
         this->load();
 }
@@ -31,11 +32,9 @@ TreePtr InternalNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
     TreePtr new_tree_ptr = NULL_PTR;
     vector<Key> keys=this->keys;
     int ind;
-    
     auto index=lower_bound(keys.begin(),keys.end(),key);
     ind=index-keys.begin();
     TreePtr insertnode=this->tree_pointers[ind];
-    cout<<ind<<endl;
     TreeNode * node=tree_node_factory(insertnode);
     TreePtr split= node->insert_key(key,record_ptr);
     if(!is_null(split)){
@@ -43,7 +42,6 @@ TreePtr InternalNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
         this->keys.push_back(leftnode->max());
         sort(this->keys.begin(),this->keys.end());
         int curr=lower_bound(this->keys.begin(),this->keys.end(),leftnode->max())-this->keys.begin()+1;
-        // this->tree_pointers.push_back(split);
         this->tree_pointers.insert(this->tree_pointers.begin()+curr,split);
         this->size+=1;
         if(this->overflows()){
@@ -63,16 +61,13 @@ TreePtr InternalNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
             newnode->dump();
         
             this->keys.erase(mid-1,this->keys.end());
-            cout<<this->keys.size()<<"*************"<<this->size<<endl;
             this->size=this->keys.size()+1;
             this->tree_pointers.erase(midpointer-1,this->tree_pointers.end());
             this->dump();
-            cout<<this->tree_ptr<<"  "<<newnode->tree_ptr<<endl;
             return newnode->tree_ptr;
         }
     }
     this->dump();
-    // cout << "InternalNode::insert_key not implemented" << endl;
     return new_tree_ptr;
 }
 
@@ -80,6 +75,35 @@ TreePtr InternalNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
 //TODO: InternalNode::delete_key to be implemented
 void InternalNode::delete_key(const Key &key) {
     TreePtr new_tree_ptr = NULL_PTR;
+    vector<Key> keys=this->keys;
+    cout<<"internal node calllll"<<endl;
+    int ind;
+    auto index=lower_bound(keys.begin(),keys.end(),key);
+    ind=index-keys.begin();
+    auto deletenode=this->tree_pointers[ind];
+    auto node =tree_node_factory(deletenode);
+    node->delete_key(key);
+    // vector<int> temp;
+    // int point=-1;
+    // for(int i=0;i<this->size;i++){
+    //     auto ptr=this->tree_pointers[i];
+    //     auto childnode=tree_node_factory(ptr);
+    //     if(childnode->size==0){
+    //         point =i;
+    //         this->size-=1;
+    //     }
+    //     else{
+    //         temp.push_back(childnode->max());
+    //     }
+    // }
+    // cout<<this->tree_pointers.size()<<" ";
+    // if(point!=-1){
+    //     this->tree_pointers.erase(tree_pointers.begin()+point);
+    // }
+    // cout<<this->tree_pointers.size()<<endl;
+    // this->keys=temp;
+    this->dump();
+    cout<<"internal node exit"<<endl;
     cout << "InternalNode::delete_key not implemented" << endl;
     this->dump();
 }
@@ -91,7 +115,6 @@ void InternalNode::range(ostream &os, const Key &min_key, const Key &max_key) co
         if (min_key <= this->keys[i]) {
             auto* child_node = TreeNode::tree_node_factory(this->tree_pointers[i]);
             child_node->range(os, min_key, max_key);
-            // cout<<"AGAIAN -----------"<<endl;
             delete child_node;
             return;
         }
