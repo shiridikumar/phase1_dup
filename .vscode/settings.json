@@ -5,6 +5,18 @@
         "deque": "cpp",
         "string": "cpp",
         "vector": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "*.tcc": "cpp",
+        "bitset": "cpp",
+        "algorithm": "cpp",
+        "memory": "cpp",
+        "random": "cpp",
+        "limits": "cpp",
+        "numeric": "cpp",
+        "ratio": "cpp",
+        "stdexcept": "cpp",
+        "regex": "cpp",
+        "tuple": "cpp",
+        "iosfwd": "cpp"
     }
 }

@@ -4,6 +4,7 @@
 LeafNode::LeafNode(const TreePtr &tree_ptr) : TreeNode(LEAF, tree_ptr) {
     this->data_pointers.clear();
     this->next_leaf_ptr = NULL_PTR;
+    this->prev_leaf_ptr=NULL_PTR;
     if(!is_null(tree_ptr))
         this->load();
 }
@@ -27,16 +28,17 @@ TreePtr LeafNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
         auto mid=this->data_pointers.begin();
         advance(mid,ceil(this->size/2.0));
    
-        TreeNode * newnode=tree_node_factory(LEAF);
+        auto newnode=new LeafNode();
         for(auto it=mid;it!=this->data_pointers.end();it++){
             newnode->insert_key((*it).first,(*it).second);
             this->size-=1;
         }
+        newnode->dump();
+        this->next_leaf_ptr=(string)newnode->tree_ptr;
+        newnode->prev_leaf_ptr=this->tree_ptr;
         this->data_pointers.erase(mid,this->data_pointers.end());
+
         this->dump();
-        // TreeNode * split_node =tree_node_factory(this->tree_ptr,newnode->tree_ptr);
-        // this->tree_ptr=split_node->tree_ptr;
-        // this->dump();
         return newnode->tree_ptr;
     }
     else{
@@ -44,7 +46,7 @@ TreePtr LeafNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
         this->size+=1;
         this->dump();
     }
-      cout << "LeafNode::insert_key not implemented" << endl;
+    //   cout << "LeafNode::insert_key not implemented" << endl;
 
     return new_leaf;
 }
@@ -52,6 +54,11 @@ TreePtr LeafNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
 //key is deleted from leaf if exists
 //TODO: LeafNode::delete_key to be implemented
 void LeafNode::delete_key(const Key &key) {
+    TreePtr leftptr=this->prev_leaf_ptr;
+    if(is_null(leftptr)){
+        auto leftchild=tree_node_factory(leftptr);
+        cout<<leftchild->size<<" "<<this->size<<endl;
+    }
     cout << "LeafNode::delete_key not implemented" << endl;
     this->dump();
 }
@@ -59,6 +66,7 @@ void LeafNode::delete_key(const Key &key) {
 //runs range query on leaf
 void LeafNode::range(ostream &os, const Key &min_key, const Key &max_key) const {
     BLOCK_ACCESSES++;
+    // cout<<this->tree_ptr<<endl;
     for(const auto& data_pointer : this->data_pointers){
         if(data_pointer.first >= min_key && data_pointer.first <= max_key)
             data_pointer.second.write_data(os);

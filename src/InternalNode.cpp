@@ -72,7 +72,7 @@ TreePtr InternalNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
         }
     }
     this->dump();
-    cout << "InternalNode::insert_key not implemented" << endl;
+    // cout << "InternalNode::insert_key not implemented" << endl;
     return new_tree_ptr;
 }
 
@@ -91,6 +91,7 @@ void InternalNode::range(ostream &os, const Key &min_key, const Key &max_key) co
         if (min_key <= this->keys[i]) {
             auto* child_node = TreeNode::tree_node_factory(this->tree_pointers[i]);
             child_node->range(os, min_key, max_key);
+            // cout<<"AGAIAN -----------"<<endl;
             delete child_node;
             return;
         }

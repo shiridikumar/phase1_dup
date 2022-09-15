@@ -14,6 +14,7 @@ class LeafNode : public TreeNode {
 public:
     map<Key, RecordPtr> data_pointers;
     TreePtr next_leaf_ptr;
+    TreePtr prev_leaf_ptr;
 
     //constructors
     explicit LeafNode(const TreePtr& tree_ptr = NULL_PTR);

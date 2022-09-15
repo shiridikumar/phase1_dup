@@ -10,6 +10,7 @@
 
 
 typedef BlockPtr TreePtr;
+extern TreePtr head_ptr;
 enum NodeType{
     LEAF,
     INTERNAL
