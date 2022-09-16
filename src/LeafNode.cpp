@@ -39,6 +39,7 @@ TreePtr LeafNode::insert_key(const Key &key, const RecordPtr &record_ptr)
             this->size -= 1;
         }
         newnode->prev_leaf_ptr = this->tree_ptr;
+        newnode->parent = this->parent;
         newnode->dump();
         this->next_leaf_ptr = (string)newnode->tree_ptr;
         this->data_pointers.erase(mid, this->data_pointers.end());
@@ -62,85 +63,91 @@ void LeafNode::delete_key(const Key &key)
 {
     TreePtr leftptr = this->prev_leaf_ptr;
     cout << "lead node callllll" << endl;
-    if (!(is_null(leftptr)))
+    this->size -= 1;
+    this->data_pointers.erase(key);
+    if (this->underflows())
     {
-        auto leftchild = new LeafNode(leftptr);
-        if (leftchild->parent == this->parent)
+        if (!(is_null(leftptr)))
         {
-            if ((this->size - 1) + leftchild->size >= 2 * ceil(FANOUT / 2.0) && leftchild->parent == this->parent)
+            auto leftchild = new LeafNode(leftptr);
+            if (leftchild->parent == this->parent)
             {
-                this->data_pointers.erase(key);
+                if ((this->size) + leftchild->size >= 2 * ceil(FANOUT / 2.0) && leftchild->parent == this->parent)
+                {
+                    this->size += 1;
+                    cout << "redistribution" << endl;
+                    auto start = leftchild->data_pointers.begin();
+                    advance(start, leftchild->data_pointers.size() - 1);
+                    this->data_pointers[(*start).first] = (*start).second;
+                    leftchild->data_pointers.erase(start);
+                    leftchild->size -= 1;
+                    leftchild->dump();
+                    this->dump();
+                    return;
+                }
+                else
+                {
+                    auto curr = this->data_pointers;
+                    for (auto it = this->data_pointers.begin(); it != this->data_pointers.end(); it++)
+                    {
+                        leftchild->data_pointers[(*it).first] = (*it).second;
+                        leftchild->size += 1;
+                    }
+                    this->data_pointers.erase(this->data_pointers.begin(), this->data_pointers.end());
+                    this->size = 0;
+                    leftchild->next_leaf_ptr = this->next_leaf_ptr;
+                    if (!is_null(this->next_leaf_ptr))
+                    {
+                        auto rightchild = new LeafNode(this->next_leaf_ptr);
+                        rightchild->prev_leaf_ptr = leftchild->tree_ptr;
+                        rightchild->dump();
+                    }
+                    leftchild->dump();
+                    this->dump();
+                    return;
+                }
+            }
+        }
 
-                cout << "redistribution" << endl;
-                auto start = leftchild->data_pointers.begin();
-                advance(start, leftchild->data_pointers.size() - 1);
+        cout << "RIGHT CHILD CALLED" << endl;
+        auto rightptr = this->next_leaf_ptr;
+        auto rightchild = new LeafNode(rightptr);
+        if (rightchild->parent == this->parent)
+        {
+            if ((this->size) + rightchild->size >= 2 * ceil(FANOUT / 2.0) && rightchild->parent == this->parent)
+            {
+                this->size += 1;
+                cout << "redistribution right " << endl;
+                auto start = rightchild->data_pointers.begin();
                 this->data_pointers[(*start).first] = (*start).second;
-                leftchild->data_pointers.erase(start);
-                leftchild->size -= 1;
-                leftchild->dump();
+                rightchild->data_pointers.erase(start);
+                rightchild->size -= 1;
+                rightchild->dump();
                 this->dump();
             }
             else
             {
                 auto curr = this->data_pointers;
-                this->data_pointers.erase(key);
                 for (auto it = this->data_pointers.begin(); it != this->data_pointers.end(); it++)
                 {
-                    leftchild->data_pointers[(*it).first] = (*it).second;
-                    leftchild->size += 1;
+                    rightchild->data_pointers[(*it).first] = (*it).second;
+                    rightchild->size += 1;
                 }
                 this->data_pointers.erase(this->data_pointers.begin(), this->data_pointers.end());
                 this->size = 0;
-                leftchild->next_leaf_ptr = this->next_leaf_ptr;
-                if (!is_null(this->next_leaf_ptr))
+                rightchild->prev_leaf_ptr = this->prev_leaf_ptr;
+                if (!is_null(this->prev_leaf_ptr))
                 {
-                    auto rightchild = new LeafNode(this->next_leaf_ptr);
-                    rightchild->prev_leaf_ptr = leftchild->tree_ptr;
-                    rightchild->dump();
+                    auto lfchild = new LeafNode(this->prev_leaf_ptr);
+                    lfchild->next_leaf_ptr = rightchild->tree_ptr;
+                    lfchild->dump();
                 }
-                leftchild->dump();
+                rightchild->dump();
                 this->dump();
             }
         }
     }
-    else
-    {
-        auto rightptr = this->next_leaf_ptr;
-        auto rightchild = new LeafNode(rightptr);
-        if ((this->size - 1) + rightchild->size >= 2 * ceil(FANOUT / 2.0) && rightchild->parent == this->parent)
-        {
-            // cout<<"yes"<<endl;
-            this->data_pointers.erase(key);
-            cout << "redistribution right " << endl;
-            auto start = rightchild->data_pointers.begin();
-            this->data_pointers[(*start).first] = (*start).second;
-            rightchild->data_pointers.erase(start);
-            rightchild->size -= 1;
-            rightchild->dump();
-            this->dump();
-        }
-        else
-        {
-            auto curr = this->data_pointers;
-            this->data_pointers.erase(key);
-            for (auto it = this->data_pointers.begin(); it != this->data_pointers.end(); it++)
-            {
-                rightchild->data_pointers[(*it).first] = (*it).second;
-                rightchild->size += 1;
-            }
-            this->data_pointers.erase(this->data_pointers.begin(), this->data_pointers.end());
-            this->size = 0;
-            rightchild->prev_leaf_ptr = this->prev_leaf_ptr;
-            if (!is_null(this->prev_leaf_ptr))
-            {
-                auto lfchild = new LeafNode(this->prev_leaf_ptr);
-                lfchild->next_leaf_ptr = rightchild->tree_ptr;
-                lfchild->dump();
-            }
-            rightchild->dump();
-            this->dump();
-        }
-    }
+
     cout << "LeafNode::delete_key not implemented" << endl;
     this->dump();
 }

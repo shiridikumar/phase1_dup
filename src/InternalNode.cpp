@@ -55,6 +55,9 @@ TreePtr InternalNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
             auto midpointer=this->tree_pointers.begin();
             advance(midpointer,ceil(this->tree_pointers.size()/2.0));
             for(auto it=midpointer;it!=this->tree_pointers.end();it++){
+                auto child_ptrs=tree_node_factory(*it);
+                child_ptrs->parent=newnode->tree_ptr;
+                child_ptrs->dump();
                 newnode->tree_pointers.push_back(*it);
                 newnode->size+=1;
             }
@@ -76,36 +79,61 @@ TreePtr InternalNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
 void InternalNode::delete_key(const Key &key) {
     TreePtr new_tree_ptr = NULL_PTR;
     vector<Key> keys=this->keys;
-    cout<<"internal node calllll"<<endl;
     int ind;
     auto index=lower_bound(keys.begin(),keys.end(),key);
     ind=index-keys.begin();
     auto deletenode=this->tree_pointers[ind];
     auto node =tree_node_factory(deletenode);
     node->delete_key(key);
-    // vector<int> temp;
-    // int point=-1;
-    // for(int i=0;i<this->size;i++){
-    //     auto ptr=this->tree_pointers[i];
-    //     auto childnode=tree_node_factory(ptr);
-    //     if(childnode->size==0){
-    //         point =i;
-    //         this->size-=1;
-    //     }
-    //     else{
-    //         temp.push_back(childnode->max());
-    //     }
-    // }
-    // cout<<this->tree_pointers.size()<<" ";
-    // if(point!=-1){
-    //     this->tree_pointers.erase(tree_pointers.begin()+point);
-    // }
-    // cout<<this->tree_pointers.size()<<endl;
-    // this->keys=temp;
+    vector<int> temp;
+    int point=-1;
+    int dec=0;
+    for(int i=0;i<this->size;i++){
+        auto ptr=this->tree_pointers[i];
+        auto childnode=tree_node_factory(ptr);
+        if(childnode->size==0){
+            point =i;
+            cout<<childnode->tree_ptr<<" >>>>>>>> " <<this->tree_ptr<<endl;
+            dec+=1;
+        }
+        else{
+            temp.push_back(childnode->max());
+        }
+    }
+    this->size-=dec;
+    if(point!=-1){
+        this->tree_pointers.erase(tree_pointers.begin()+point);
+    }
+    this->keys=temp;
+
+    if(this->underflows()){
+        auto parentptr=this->parent;
+        if(!is_null(parentptr)){
+            auto parentnode=new InternalNode(parentptr);
+            auto parent_ptr=parentnode->tree_pointers;
+            auto it=find(parent_ptr.begin(),parent_ptr.end(),this->tree_ptr);
+            if(it!=parent_ptr.begin()){
+                advance(it,-1);
+                auto leftsibling=new InternalNode(*it);
+                leftsibling->keys.push_back(leftsibling->max());
+                leftsibling->tree_pointers.push_back(this->tree_pointers[0]);
+                leftsibling->size+=1;
+                auto cpr=tree_node_factory(this->tree_pointers[0]);
+                cpr->parent=leftsibling->tree_ptr;
+                cpr->dump();
+                auto beg=this->tree_pointers.begin();
+                this->tree_pointers.erase(beg);
+                auto keybeg=this->keys.begin();
+                // this->keys.erase(this->keys.begin());
+                this->size-=1;
+                this->dump();
+                leftsibling->dump();
+                cout<<"ENDING ----------------- AGAIN>"<<endl;
+            }
+        }
+    }
     this->dump();
-    cout<<"internal node exit"<<endl;
-    cout << "InternalNode::delete_key not implemented" << endl;
-    this->dump();
+    // this->dump();
 }
 
 //runs range query on subtree rooted at this node
@@ -164,34 +192,41 @@ void InternalNode::chart(ostream &os) {
 
 ostream& InternalNode::write(ostream &os) const {
     TreeNode::write(os);
-    for (int i = 0; i < this->size - 1; i++) {
+    cout<<"****************"<<endl;
+        if(this->size>0){
+        for (int i = 0; i < this->size - 1; i++) {
+            if (&os == &cout)
+                os << "\nP" << i + 1 << ": ";
+            os << this->tree_pointers[i] << " ";
+            if (&os == &cout)
+                os << "\nK" << i + 1 << ": ";
+            os << this->keys[i] << " ";
+        }
         if (&os == &cout)
-            os << "\nP" << i + 1 << ": ";
-        os << this->tree_pointers[i] << " ";
-        if (&os == &cout)
-            os << "\nK" << i + 1 << ": ";
-        os << this->keys[i] << " ";
+            os << "\nP" << this->size << ": ";
+        os << this->tree_pointers[this->size - 1];
     }
-    if (&os == &cout)
-        os << "\nP" << this->size << ": ";
-    os << this->tree_pointers[this->size - 1];
+    cout<<"****************"<<endl;
     return os;
 }
 
 istream& InternalNode::read(istream& is) {
     TreeNode::read(is);
+    if(this->size>0){
     this->keys.assign(this->size - 1, DELETE_MARKER);
     this->tree_pointers.assign(this->size, NULL_PTR);
-    for (int i = 0; i < this->size - 1; i++) {
+   
+        for (int i = 0; i < this->size - 1; i++) {
+            if (&is == &cin)
+                cout << "P" << i + 1 << ": ";
+            is >> this->tree_pointers[i];
+            if (&is == &cin)
+                cout << "K" << i + 1 << ": ";
+            is >> this->keys[i];
+        }
         if (&is == &cin)
-            cout << "P" << i + 1 << ": ";
-        is >> this->tree_pointers[i];
-        if (&is == &cin)
-            cout << "K" << i + 1 << ": ";
-        is >> this->keys[i];
+            cout << "P" << this->size;
+        is >> this->tree_pointers[this->size - 1];
     }
-    if (&is == &cin)
-        cout << "P" << this->size;
-    is >> this->tree_pointers[this->size - 1];
     return is;
 }

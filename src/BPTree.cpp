@@ -29,8 +29,10 @@ void BPTree::insert_key(const Key &key, const RecordPtr &record_ptr) {
 void BPTree::delete_key(const Key &key) {
     TreeNode* root_node = TreeNode::tree_node_factory(this->root_ptr);
     root_node->delete_key(key);
+     cout<<"rott node splitting "<<endl;
     //height of bptree should be decreased
     if(root_node->size == 1 && root_node->node_type == INTERNAL) {
+        cout<<"rott node splitting "<<endl;
         this->root_ptr = root_node->single_child_ptr();
         root_node->delete_node();
     }
