@@ -3,8 +3,8 @@
 #include "BPTree.hpp"
 #include "Query.hpp"
 
-const uint BLOCK_SIZE = 4; // >= 2 (in number of records/keys)
-const uint FANOUT = 3; //fanout >= 3
+const uint BLOCK_SIZE = 6; // >= 2 (in number of records/keys)
+const uint FANOUT = 5; //fanout >= 3
 const uint MIN_OCCUPANCY = ceil((float)FANOUT/2.0);
 
 uint BLOCK_ACCESSES = 0;

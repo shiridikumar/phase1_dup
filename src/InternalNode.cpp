@@ -147,21 +147,23 @@ void InternalNode::delete_key(const Key &key) {
                 }
                 else{
                     if(leftsibling->size+this->size<=FANOUT){
-                          cout<<"case 2 left merging "<<endl;
-                        leftsibling->keys.push_back(leftsibling->max());
-                        leftsibling->tree_pointers.push_back(this->tree_pointers[0]);
-                        leftsibling->size+=1;
-                        auto cpr=tree_node_factory(this->tree_pointers[0]);
-                        cpr->parent=leftsibling->tree_ptr;
-                        cpr->dump();
-                        auto beg=this->tree_pointers.begin();
-                        this->tree_pointers.erase(beg);
-                        auto keybeg=this->keys.begin();
-                        // this->keys.erase(this->keys.begin());
-                        this->size-=1;
-                        this->dump();
-                        leftsibling->dump();
-                        cout<<"ENDING ----------------- AGAIN>"<<endl;
+                        cout<<"case 2 left merging "<<endl;
+                        while(this->size>0){
+                            leftsibling->keys.push_back(leftsibling->max());
+                            leftsibling->tree_pointers.push_back(this->tree_pointers[0]);
+                            leftsibling->size+=1;
+                            auto cpr=tree_node_factory(this->tree_pointers[0]);
+                            cpr->parent=leftsibling->tree_ptr;
+                            cpr->dump();
+                            auto beg=this->tree_pointers.begin();
+                            this->tree_pointers.erase(beg);
+                            auto keybeg=this->keys.begin();
+                            // this->keys.erase(this->keys.begin());
+                            this->size-=1;
+                            this->dump();
+                            leftsibling->dump();
+                            cout<<"ENDING ----------------- AGAIN>"<<endl;
+                        }
                         return;
                     }
                 }
@@ -193,25 +195,24 @@ void InternalNode::delete_key(const Key &key) {
                 else{
                     if(rightsibling->size+this->size<=FANOUT){
                          cout << "4 right merging" << endl;
-                        // leftsibling->keys.push_back(leftsibling->max());
-                        rightsibling->tree_pointers.insert(rightsibling->tree_pointers.begin(),this->tree_pointers[0]);
-
-                        rightsibling->size+=1;
-                        auto cpr=tree_node_factory(this->tree_pointers[0]);
-                        cpr->parent=rightsibling->tree_ptr;
-                        cpr->dump();
-                        auto beg=this->tree_pointers.begin();
-                        this->tree_pointers.erase(beg);
-                        auto keybeg=this->keys.begin();
-                        auto key_beg=rightsibling->keys.begin();
-                        // this->keys.insert(key_beg,this->max());
-                        // this->keys.erase(this->keys.begin());
-                        cout<<this->min()<<"            -----------------          "<<endl;
-                        rightsibling->keys.insert(key_beg,this->max());
-                        this->size-=1;
-                        this->dump();
-                        rightsibling->dump();
-                        cout<<"ENDING ----------------- AGAIN>"<<endl;
+                        while(this->size>0){
+                            rightsibling->tree_pointers.insert(rightsibling->tree_pointers.begin(),this->tree_pointers[this->tree_pointers.size()-1]);
+                            rightsibling->size+=1;
+                            cout <<this->size<<"*************"<<endl;
+                            auto cpr=tree_node_factory(this->tree_pointers[this->tree_pointers.size()-1]);
+                            cpr->parent=rightsibling->tree_ptr;
+                            cpr->dump();
+                            auto beg=this->tree_pointers.begin()+this->tree_pointers.size()-1;
+                            this->tree_pointers.erase(beg);
+                            auto keybeg=this->keys.begin();
+                            auto key_beg=rightsibling->keys.begin();
+                            rightsibling->keys.insert(key_beg,this->max());
+                            cout <<this->size<<"*************"<<endl;
+                            this->size-=1;
+                            this->dump();
+                            rightsibling->dump();
+                            cout <<this->size<<"*************"<<endl;
+                        }
                         return;
 
                     }
