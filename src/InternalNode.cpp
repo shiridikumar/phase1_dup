@@ -115,26 +115,49 @@ void InternalNode::delete_key(const Key &key) {
             if(it!=parent_ptr.begin()){
                 advance(it,-1);
                 auto leftsibling=new InternalNode(*it);
-                leftsibling->keys.push_back(leftsibling->max());
-                leftsibling->tree_pointers.push_back(this->tree_pointers[0]);
-                leftsibling->size+=1;
-                auto cpr=tree_node_factory(this->tree_pointers[0]);
-                cpr->parent=leftsibling->tree_ptr;
-                cpr->dump();
-                auto beg=this->tree_pointers.begin();
-                this->tree_pointers.erase(beg);
-                auto keybeg=this->keys.begin();
-                // this->keys.erase(this->keys.begin());
-                this->size-=1;
-                this->dump();
-                leftsibling->dump();
-                cout<<"ENDING ----------------- AGAIN>"<<endl;
+                if(leftsibling->size+this->size >= 2 * ceil(FANOUT / 2.0)){
+                    cout << "redistribution" << endl;
+                    this->size+=1;
+                    auto start = leftsibling->tree_pointers.begin();
+                    this->keys[0]=leftsibling->max();
+                    advance(start, leftsibling->tree_pointers.size() - 1);
+                    auto addnode= tree_node_factory(*start);
+                    addnode->parent=this->tree_ptr;
+                    addnode->dump();
+                    cout<<addnode->tree_ptr<<"  ============== "<<addnode->parent<<endl;
+                    this->tree_pointers.insert(this->tree_pointers.begin(),*start);
+                    leftsibling->tree_pointers.erase(start);
+                    leftsibling->size -= 1;
+                    leftsibling->dump();
+                    this->dump();
+
+                }
+                else{
+                    if(leftsibling->size+this->size<=FANOUT){
+                        leftsibling->keys.push_back(leftsibling->max());
+                        leftsibling->tree_pointers.push_back(this->tree_pointers[0]);
+                        leftsibling->size+=1;
+                        auto cpr=tree_node_factory(this->tree_pointers[0]);
+                        cpr->parent=leftsibling->tree_ptr;
+                        cpr->dump();
+                        auto beg=this->tree_pointers.begin();
+                        this->tree_pointers.erase(beg);
+                        auto keybeg=this->keys.begin();
+                        // this->keys.erase(this->keys.begin());
+                        this->size-=1;
+                        this->dump();
+                        leftsibling->dump();
+                        cout<<"ENDING ----------------- AGAIN>"<<endl;
+                    }
+                }
             }
         }
     }
     this->dump();
     // this->dump();
 }
+
+
 
 //runs range query on subtree rooted at this node
 void InternalNode::range(ostream &os, const Key &min_key, const Key &max_key) const {
@@ -192,7 +215,7 @@ void InternalNode::chart(ostream &os) {
 
 ostream& InternalNode::write(ostream &os) const {
     TreeNode::write(os);
-    cout<<"****************"<<endl;
+    // cout<<"****************"<<endl;
         if(this->size>0){
         for (int i = 0; i < this->size - 1; i++) {
             if (&os == &cout)
@@ -206,7 +229,7 @@ ostream& InternalNode::write(ostream &os) const {
             os << "\nP" << this->size << ": ";
         os << this->tree_pointers[this->size - 1];
     }
-    cout<<"****************"<<endl;
+    // cout<<"****************"<<endl;
     return os;
 }
 

@@ -38,8 +38,12 @@ TreePtr LeafNode::insert_key(const Key &key, const RecordPtr &record_ptr)
             newnode->insert_key((*it).first, (*it).second);
             this->size -= 1;
         }
+        auto nextptr=new LeafNode(this->next_leaf_ptr);
+        nextptr->prev_leaf_ptr=newnode->tree_ptr;
+        nextptr->dump();
         newnode->prev_leaf_ptr = this->tree_ptr;
         newnode->parent = this->parent;
+        newnode->next_leaf_ptr=this->next_leaf_ptr;
         newnode->dump();
         this->next_leaf_ptr = (string)newnode->tree_ptr;
         this->data_pointers.erase(mid, this->data_pointers.end());
@@ -67,6 +71,8 @@ void LeafNode::delete_key(const Key &key)
     this->data_pointers.erase(key);
     if (this->underflows())
     {
+        cout<<"underflowed -------------"<<endl;
+
         if (!(is_null(leftptr)))
         {
             auto leftchild = new LeafNode(leftptr);
@@ -150,6 +156,7 @@ void LeafNode::delete_key(const Key &key)
 
     cout << "LeafNode::delete_key not implemented" << endl;
     this->dump();
+
 }
 
 // runs range query on leaf
