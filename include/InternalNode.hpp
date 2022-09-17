@@ -26,6 +26,7 @@ public:
 
     //helper functions
     Key max() override;
+    Key min() override;
     TreePtr single_child_ptr() override;
 
     //key functions

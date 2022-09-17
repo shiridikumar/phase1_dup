@@ -34,6 +34,12 @@ void BPTree::delete_key(const Key &key) {
     if(root_node->size == 1 && root_node->node_type == INTERNAL) {
         cout<<"rott node splitting "<<endl;
         this->root_ptr = root_node->single_child_ptr();
+        auto single_child=root_node->single_child_ptr();
+        if(!is_null(single_child)){
+            auto getchild=TreeNode::tree_node_factory(single_child);
+            getchild->parent=NULL_PTR;
+            getchild->dump();
+        }
         root_node->delete_node();
     }
     delete root_node;

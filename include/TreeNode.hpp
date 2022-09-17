@@ -40,6 +40,7 @@ public:
     bool overflows() const;
     bool underflows() const;
     virtual Key max() {return DELETE_MARKER;}
+    virtual Key min() {return DELETE_MARKER;}
     virtual TreePtr single_child_ptr() {return NULL_PTR;}
 
     //key functions

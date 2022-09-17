@@ -18,6 +18,15 @@
         "regex": "cpp",
         "tuple": "cpp",
         "iosfwd": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "chrono": "cpp",
+        "valarray": "cpp",
+        "bit": "cpp",
+        "charconv": "cpp",
+        "complex": "cpp",
+        "functional": "cpp",
+        "string_view": "cpp",
+        "istream": "cpp",
+        "memory_resource": "cpp"
     }
 }

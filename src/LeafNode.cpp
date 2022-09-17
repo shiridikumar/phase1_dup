@@ -18,6 +18,11 @@ Key LeafNode::max()
     return it->first;
 }
 
+Key LeafNode::min(){
+    auto it=this->data_pointers.begin();
+    return it->first;
+}
+
 // inserts <key, record_ptr> to leaf. If overflow occurs, leaf is split
 // split node is returned
 // TODO: LeafNode::insert_key to be implemented
@@ -69,7 +74,7 @@ void LeafNode::delete_key(const Key &key)
     cout << "lead node callllll" << endl;
     this->size -= 1;
     this->data_pointers.erase(key);
-    if (this->underflows())
+    if (this->underflows() && !is_null(this->parent))
     {
         cout<<"underflowed -------------"<<endl;
 

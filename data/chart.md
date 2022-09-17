@@ -1,18 +1,22 @@
 ```mermaid
 graph TD
 subgraph B+TREE
-zbvrk17[zbvrk17<br/>size: 2<br/>]
-pqyss14[pqyss14<br/>size: 2<br/>5 13 ]
-zbvrk17-->|x <= 13|pqyss14
-tntxs15[tntxs15<br/>size: 2<br/>14 100 ]
-zbvrk17-->|13 < x|tntxs15
+cpesi11[cpesi11<br/>size: 3<br/>]
+gmqup7[gmqup7<br/>size: 3<br/>4 5 6 ]
+cpesi11-->|x <= 6|gmqup7
+mniyu14[mniyu14<br/>size: 2<br/>7 10 ]
+cpesi11-->|6 < x <= 10|mniyu14
+hooer9[hooer9<br/>size: 2<br/>11 12 ]
+cpesi11-->|10 < x|hooer9
 end
 ```
 ```mermaid
 graph LR
 subgraph UNORDERED_HEAP
-eqhfu6[eqhfu6<br/>size: 3<br/>100 13 _ 14 ]
-edrrv13[edrrv13<br/>size: 1<br/>_ 5 _ _ ]
-eqhfu6-->edrrv13
+nwlrb1[nwlrb1<br/>size: 1<br/>_ _ _ 4 ]
+tgjum6[tgjum6<br/>size: 4<br/>5 10 11 12 ]
+nwlrb1-->tgjum6
+bjxtd13[bjxtd13<br/>size: 2<br/>6 7 _ _ ]
+tgjum6-->bjxtd13
 end
 ```
