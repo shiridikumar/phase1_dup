@@ -58,6 +58,7 @@ void Query::execute() const{
 
 void Query::execute_insert() const {
     RecordPtr record_ptr = heap.insert_key(this->insert_key);
+    // cout<<this->insert_key<<" "<<record_ptr.block_ptr<<endl;
     bptree.insert_key(this->insert_key, record_ptr);
     chart();
 }

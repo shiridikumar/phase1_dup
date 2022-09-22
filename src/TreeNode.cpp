@@ -51,7 +51,6 @@ TreeNode* TreeNode::tree_node_factory(TreePtr tree_ptr) {
     ifstream fin(TEMP_PATH + tree_ptr);
     fin >> node_type;
     fin.close();
-
     switch (node_type) {
         case LEAF: return new LeafNode(tree_ptr);
         case INTERNAL: return new InternalNode(tree_ptr);
@@ -64,6 +63,12 @@ TreeNode* TreeNode::tree_node_factory(const TreePtr &child_tree_ptr1, const Tree
     new_internal_node->tree_pointers.push_back(child_tree_ptr1);
     new_internal_node->tree_pointers.push_back(child_tree_ptr2);
     auto left_child_node = TreeNode::tree_node_factory(child_tree_ptr1);
+    auto right_child_node = TreeNode::tree_node_factory(child_tree_ptr2);
+    left_child_node->parent=new_internal_node->tree_ptr;
+    right_child_node->parent=new_internal_node->tree_ptr;
+    cout<<left_child_node->tree_ptr<<" ---------------- "<<right_child_node->tree_ptr<<"--------- "<<new_internal_node->tree_ptr<<endl;
+    left_child_node->dump();
+    right_child_node->dump();
     new_internal_node->keys.push_back(left_child_node->max());
     delete left_child_node;
     new_internal_node->size = 2;
@@ -108,6 +113,8 @@ void TreeNode::dump() const{
 
 void TreeNode::load() {
     ifstream fin(TEMP_PATH + this->tree_ptr);
+    // cout<<"reading"<<endl;
+    //  cout<<TEMP_PATH+this->tree_ptr<<endl;
     this->read(fin);
     fin.close();
 }
@@ -125,6 +132,7 @@ ostream& TreeNode::write(ostream& os) const {
         os << this->node_type << endl;
         os << this->tree_ptr << endl;
         os << this->size << endl;
+        os << this->parent << endl;
     }
     return os;
 }
@@ -135,9 +143,11 @@ istream& TreeNode::read(istream& is){
         cout << "tree node id: "; cin >> this->tree_ptr;
         cout << "size: "; cin >> this->size;
     } else {
+        // cout<<"asdasda "<<endl;
         is >> this->node_type;
         is >> this->tree_ptr;
         is >> this->size;
+        is >> this->parent;
     }
     return is;
 }

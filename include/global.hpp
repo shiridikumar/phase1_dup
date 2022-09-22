@@ -24,7 +24,6 @@ extern const string TEMP_PATH;
 extern const int DELETE_MARKER;
 extern const string NULL_PTR;
 extern const string BREAK;
-
 extern uint BLOCK_ACCESSES;
 
 class Block;

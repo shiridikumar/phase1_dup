@@ -10,6 +10,7 @@
 
 
 typedef BlockPtr TreePtr;
+extern TreePtr head_ptr;
 enum NodeType{
     LEAF,
     INTERNAL
@@ -23,6 +24,7 @@ public:
     NodeType node_type;
     TreePtr tree_ptr;
     uint size;
+    TreePtr parent;
 
     //constructor
     explicit TreeNode(const NodeType& node_type = INTERNAL, const TreePtr & tree_ptr = NULL_PTR);
@@ -38,6 +40,7 @@ public:
     bool overflows() const;
     bool underflows() const;
     virtual Key max() {return DELETE_MARKER;}
+    virtual Key min() {return DELETE_MARKER;}
     virtual TreePtr single_child_ptr() {return NULL_PTR;}
 
     //key functions

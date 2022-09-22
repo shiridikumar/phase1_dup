@@ -7,10 +7,13 @@ RecordPtr::RecordPtr(BlockPtr block_ptr, RecordPosition record_pos) {
 
 void RecordPtr::write_data(ostream &os) const {
     BLOCK_ACCESSES++;
+    // cout<<"agaaaaain  "<<BLOCK_ACCESSES<<endl;
     if(is_null(this->block_ptr))
         return;
     auto block = new Block(this->block_ptr);
-    os << (*block)[this->record_pos] << endl;
+    // cout<<(*block)[this->record_pos]<<endl;
+    // auto = (*block)[this->record_pos]
+    os <<  (*block)[this->record_pos] << endl;
     delete block;
 }
 

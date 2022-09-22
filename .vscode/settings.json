@@ -1,0 +1,32 @@
+{
+    "files.associations": {
+        "ostream": "cpp",
+        "new": "cpp",
+        "deque": "cpp",
+        "string": "cpp",
+        "vector": "cpp",
+        "cmath": "cpp",
+        "*.tcc": "cpp",
+        "bitset": "cpp",
+        "algorithm": "cpp",
+        "memory": "cpp",
+        "random": "cpp",
+        "limits": "cpp",
+        "numeric": "cpp",
+        "ratio": "cpp",
+        "stdexcept": "cpp",
+        "regex": "cpp",
+        "tuple": "cpp",
+        "iosfwd": "cpp",
+        "iostream": "cpp",
+        "chrono": "cpp",
+        "valarray": "cpp",
+        "bit": "cpp",
+        "charconv": "cpp",
+        "complex": "cpp",
+        "functional": "cpp",
+        "string_view": "cpp",
+        "istream": "cpp",
+        "memory_resource": "cpp"
+    }
+}
