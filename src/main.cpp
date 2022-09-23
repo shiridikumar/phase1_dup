@@ -3,7 +3,7 @@
 #include "BPTree.hpp"
 #include "Query.hpp"
 
-const uint BLOCK_SIZE = 4; // >= 2 (in number of records/keys)
+const uint BLOCK_SIZE = 2; // >= 2 (in number of records/keys)
 const uint FANOUT = 3; //fanout >= 3
 const uint MIN_OCCUPANCY = ceil((float)FANOUT/2.0);
 
@@ -19,6 +19,7 @@ UnorderedHeap heap;
 BPTree bptree;
 
 int main(int argc, char* argv[]) {
+    const int result = remove( "../data/all_ranges.txt" );
     initialize();
     if(argc > 1)
         Query::execute_script(argv[1]);//executes all commands in data/argv[1]

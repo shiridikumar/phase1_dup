@@ -71,12 +71,20 @@ TreePtr LeafNode::insert_key(const Key &key, const RecordPtr &record_ptr)
 void LeafNode::delete_key(const Key &key)
 {
     TreePtr leftptr = this->prev_leaf_ptr;
-    cout << "lead node callllll" << endl;
+    // cout << "lead node callllll" << endl;
     this->size -= 1;
+    // cout<<is_null(this->data_pointers[key].block_ptr)<<"****"<<endl;
+    if (is_null(this->data_pointers[key].block_ptr))
+    {
+        // cout<<"not found"<<endl;
+        return;
+        /* code */
+    }
+    
     this->data_pointers.erase(key);
     if (this->underflows() && !is_null(this->parent))
     {
-        cout<<"underflowed -------------"<<endl;
+        // cout<<"underflowed -------------"<<endl;
 
         if (!(is_null(leftptr)))
         {
@@ -86,7 +94,7 @@ void LeafNode::delete_key(const Key &key)
                 if ((this->size) + leftchild->size >= 2 * ceil(FANOUT / 2.0) && leftchild->parent == this->parent)
                 {
                     this->size += 1;
-                    cout << "redistribution" << endl;
+                    // cout << "redistribution" << endl;
                     auto start = leftchild->data_pointers.begin();
                     advance(start, leftchild->data_pointers.size() - 1);
                     this->data_pointers[(*start).first] = (*start).second;
@@ -120,7 +128,7 @@ void LeafNode::delete_key(const Key &key)
             }
         }
 
-        cout << "RIGHT CHILD CALLED" << endl;
+        // cout << "RIGHT CHILD CALLED" << endl;
         auto rightptr = this->next_leaf_ptr;
         auto rightchild = new LeafNode(rightptr);
         if (rightchild->parent == this->parent)
@@ -128,7 +136,7 @@ void LeafNode::delete_key(const Key &key)
             if ((this->size) + rightchild->size >= 2 * ceil(FANOUT / 2.0) && rightchild->parent == this->parent)
             {
                 this->size += 1;
-                cout << "redistribution right " << endl;
+                // cout << "redistribution right " << endl;
                 auto start = rightchild->data_pointers.begin();
                 this->data_pointers[(*start).first] = (*start).second;
                 rightchild->data_pointers.erase(start);
@@ -159,7 +167,7 @@ void LeafNode::delete_key(const Key &key)
         }
     }
 
-    cout << "LeafNode::delete_key not implemented" << endl;
+    // cout << "LeafNode::delete_key not implemented" << endl;
     this->dump();
 
 }
@@ -168,7 +176,8 @@ void LeafNode::delete_key(const Key &key)
 void LeafNode::range(ostream &os, const Key &min_key, const Key &max_key) const
 {
     BLOCK_ACCESSES++;
-    // cout<<this->tree_ptr<<endl;
+
+    // cout<<this->tree_ptr<<" "<<BLOCK_ACCESSES<<"***************"<<endl;
     for (const auto &data_pointer : this->data_pointers)
     {
         if (data_pointer.first >= min_key && data_pointer.first <= max_key)
@@ -176,7 +185,8 @@ void LeafNode::range(ostream &os, const Key &min_key, const Key &max_key) const
         if (data_pointer.first > max_key)
             return;
     }
-    if (!is_null(this->next_leaf_ptr))
+    auto curr=tree_node_factory(this->tree_ptr);
+    if (!is_null(this->next_leaf_ptr) && max_key>curr->max())
     {
         auto next_leaf_node = new LeafNode(this->next_leaf_ptr);
         next_leaf_node->range(os, min_key, max_key);
