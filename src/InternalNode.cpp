@@ -55,7 +55,7 @@ TreePtr InternalNode::insert_key(const Key &key, const RecordPtr &record_ptr) {
         this->size+=1;
         if(this->overflows()){
             auto mid=this->keys.begin();
-            cout<<this->keys.size()<<endl;
+            // cout<<this->keys.size()<<endl;
             advance(mid,ceil(this->keys.size()/2.0));
             auto newnode=new InternalNode();
             for(auto it=mid;it!=this->keys.end();it++){
@@ -102,7 +102,7 @@ void InternalNode::delete_key(const Key &key) {
         auto childnode=tree_node_factory(ptr);
         if(childnode->size==0){
             point =i;
-            cout<<childnode->tree_ptr<<" >>>>>>>> " <<this->tree_ptr<<endl;
+            // cout<<childnode->tree_ptr<<" >>>>>>>> " <<this->tree_ptr<<endl;
             dec+=1;
         }
         else{
@@ -117,7 +117,7 @@ void InternalNode::delete_key(const Key &key) {
 
     if(this->underflows()){
         auto parentptr=this->parent;
-        cout<<"underflow again *****************"<<parentptr<<endl;
+        // cout<<"underflow again *****************"<<parentptr<<endl;
         if(!is_null(parentptr)){
             auto parentnode=new InternalNode(parentptr);
             auto parent_ptr=parentnode->tree_pointers;
@@ -135,7 +135,7 @@ void InternalNode::delete_key(const Key &key) {
                     auto addnode= tree_node_factory(*start);
                     addnode->parent=this->tree_ptr;
                     addnode->dump();
-                    cout<<addnode->tree_ptr<<"  ============== "<<addnode->parent<<endl;
+                    // cout<<addnode->tree_ptr<<"  ============== "<<addnode->parent<<endl;
                     this->tree_pointers.insert(this->tree_pointers.begin(),*start);
                     leftsibling->tree_pointers.erase(start);
                     leftsibling->size -= 1;
@@ -147,7 +147,7 @@ void InternalNode::delete_key(const Key &key) {
                 }
                 else{
                     if(leftsibling->size+this->size<=FANOUT){
-                        cout<<"case 2 left merging "<<endl;
+                        // cout<<"case 2 left merging "<<endl;
                         while(this->size>0){
                             leftsibling->keys.push_back(leftsibling->max());
                             leftsibling->tree_pointers.push_back(this->tree_pointers[0]);
@@ -162,7 +162,7 @@ void InternalNode::delete_key(const Key &key) {
                             this->size-=1;
                             this->dump();
                             leftsibling->dump();
-                            cout<<"ENDING ----------------- AGAIN>"<<endl;
+                            // cout<<"ENDING ----------------- AGAIN>"<<endl;
                         }
                         return;
                     }
@@ -174,12 +174,12 @@ void InternalNode::delete_key(const Key &key) {
 
                 auto rightsibling=new InternalNode(*it);
                 if(rightsibling->size+this->size >= 2 * ceil(FANOUT / 2.0)){
-                    cout << "3 right redistribution" << endl;
+                    // cout << "3 right redistribution" << endl;
                     auto start = rightsibling->tree_pointers.begin();
                     auto addnode= tree_node_factory(*start);
                     addnode->parent=this->tree_ptr;
                     addnode->dump();
-                    cout<<addnode->tree_ptr<<"  ============== "<<addnode->parent<<endl;
+                    // cout<<addnode->tree_ptr<<"  ============== "<<addnode->parent<<endl;
                     this->keys.push_back(this->max());
                     this->tree_pointers.push_back(*start);
                     rightsibling->keys.erase(rightsibling->keys.begin());
@@ -194,11 +194,11 @@ void InternalNode::delete_key(const Key &key) {
                 }
                 else{
                     if(rightsibling->size+this->size<=FANOUT){
-                         cout << "4 right merging" << endl;
+                        //  cout << "4 right merging" << endl;
                         while(this->size>0){
                             rightsibling->tree_pointers.insert(rightsibling->tree_pointers.begin(),this->tree_pointers[this->tree_pointers.size()-1]);
                             rightsibling->size+=1;
-                            cout <<this->size<<"*************"<<endl;
+                            // cout <<this->size<<"*************"<<endl;
                             auto cpr=tree_node_factory(this->tree_pointers[this->tree_pointers.size()-1]);
                             cpr->parent=rightsibling->tree_ptr;
                             cpr->dump();
@@ -207,11 +207,11 @@ void InternalNode::delete_key(const Key &key) {
                             auto keybeg=this->keys.begin();
                             auto key_beg=rightsibling->keys.begin();
                             rightsibling->keys.insert(key_beg,this->max());
-                            cout <<this->size<<"*************"<<endl;
+                            // cout <<this->size<<"*************"<<endl;
                             this->size-=1;
                             this->dump();
                             rightsibling->dump();
-                            cout <<this->size<<"*************"<<endl;
+                            // cout <<this->size<<"*************"<<endl;
                         }
                         return;
 
@@ -223,7 +223,7 @@ void InternalNode::delete_key(const Key &key) {
             }
             
         }
-        cout<<"ending now"<<endl;
+        // cout<<"ending now"<<endl;
     }
     this->dump();
     // this->dump();
@@ -234,7 +234,7 @@ void InternalNode::delete_key(const Key &key) {
 //runs range query on subtree rooted at this node
 void InternalNode::range(ostream &os, const Key &min_key, const Key &max_key) const {
     BLOCK_ACCESSES++;
-    cout<<this->tree_ptr<<" ***********  "<<BLOCK_ACCESSES<<endl;
+    // cout<<this->tree_ptr<<" ***********  "<<BLOCK_ACCESSES<<endl;
     for (int i = 0; i < this->size - 1; i++) {
         if (min_key <= this->keys[i]) {
             auto* child_node = TreeNode::tree_node_factory(this->tree_pointers[i]);

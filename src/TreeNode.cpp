@@ -66,7 +66,7 @@ TreeNode* TreeNode::tree_node_factory(const TreePtr &child_tree_ptr1, const Tree
     auto right_child_node = TreeNode::tree_node_factory(child_tree_ptr2);
     left_child_node->parent=new_internal_node->tree_ptr;
     right_child_node->parent=new_internal_node->tree_ptr;
-    cout<<left_child_node->tree_ptr<<" ---------------- "<<right_child_node->tree_ptr<<"--------- "<<new_internal_node->tree_ptr<<endl;
+    // cout<<left_child_node->tree_ptr<<" ---------------- "<<right_child_node->tree_ptr<<"--------- "<<new_internal_node->tree_ptr<<endl;
     left_child_node->dump();
     right_child_node->dump();
     new_internal_node->keys.push_back(left_child_node->max());
