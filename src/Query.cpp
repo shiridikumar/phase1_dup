@@ -75,13 +75,17 @@ void Query::execute_delete() const {
  * case. To be used in Part(c)
  */
 void Query::execute_range() const {
+    ofstream foutfile(DATA_PATH+"all_ranges.txt",ios::app);
     ofstream fout(DATA_PATH + "range_[" + to_string(this->min_range_key) + "_" + to_string(this->max_range_key) + "].txt");
     BLOCK_ACCESSES = 0;
     bptree.range(fout, this->min_range_key, this->max_range_key);
     cout << BLOCK_ACCESSES << " ";
+    foutfile<<BLOCK_ACCESSES<<" ";
     BLOCK_ACCESSES = 0;
     heap.range(fout, this->min_range_key, this->max_range_key);
     cout << BLOCK_ACCESSES << endl;
+    foutfile<<BLOCK_ACCESSES<<endl;
+    foutfile.close();
     BLOCK_ACCESSES = 0;
     fout.close();
 }

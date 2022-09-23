@@ -168,7 +168,8 @@ void LeafNode::delete_key(const Key &key)
 void LeafNode::range(ostream &os, const Key &min_key, const Key &max_key) const
 {
     BLOCK_ACCESSES++;
-    // cout<<this->tree_ptr<<endl;
+
+    cout<<this->tree_ptr<<BLOCK_ACCESSES<<"***************"<<endl;
     for (const auto &data_pointer : this->data_pointers)
     {
         if (data_pointer.first >= min_key && data_pointer.first <= max_key)

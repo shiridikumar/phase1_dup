@@ -234,6 +234,7 @@ void InternalNode::delete_key(const Key &key) {
 //runs range query on subtree rooted at this node
 void InternalNode::range(ostream &os, const Key &min_key, const Key &max_key) const {
     BLOCK_ACCESSES++;
+    cout<<this->tree_ptr<<" ***********  "<<BLOCK_ACCESSES<<endl;
     for (int i = 0; i < this->size - 1; i++) {
         if (min_key <= this->keys[i]) {
             auto* child_node = TreeNode::tree_node_factory(this->tree_pointers[i]);
